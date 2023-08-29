@@ -10624,8 +10624,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 11401266}
-  speed: 15
-  is_jamp: 0
+  speed: 5
+  jamp: 15
+  isJamp: 0
 --- !u!135 &1740148289
 SphereCollider:
   m_ObjectHideFlags: 0

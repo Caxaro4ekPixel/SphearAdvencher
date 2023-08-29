@@ -9,7 +9,7 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] private GameObject[] ponts;
     [SerializeField] private float speed = 20f;
 
-    private bool is_move = false;
+    private bool isMove = false;
     private int nextPoint;
     private System.Random random = new System.Random();
     private Transform nextPosition;
@@ -18,13 +18,13 @@ public class EnemyMove : MonoBehaviour
     private void Update()
     {
         //ћен€ем анимацию на двежение
-        this.gameObject.GetComponent<Animator>().SetBool("Is move", is_move);
+        gameObject.GetComponent<Animator>().SetBool("Is move", isMove);
 
         //≈сли движени€ нет, то выбираем новую точку
-        if (!is_move)
+        if (!isMove)
         {
             nextPoint = random.Next(0, ponts.Length);
-            is_move = true;
+            isMove = true;
         }
 
         //ѕоворачиваем в сторону точки
@@ -36,7 +36,7 @@ public class EnemyMove : MonoBehaviour
         
         //ѕолучаем координаты точки и если мы уже пришли то останавливаем движение
         nextPosition = ponts[nextPoint].transform;
-        if (this.transform.position.x == nextPosition.position.x && this.transform.position.y == nextPosition.position.y && this.transform.position.z == nextPosition.position.z)
-            is_move = false;
+        if (transform.position.x == nextPosition.position.x && transform.position.y == nextPosition.position.y && transform.position.z == nextPosition.position.z)
+            isMove = false;
     }
 }

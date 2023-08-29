@@ -27,6 +27,6 @@ public class ScenesMenager : MonoBehaviour
 
     public void OnLoadGameScene()
     {
-        SceneManager.LoadScene(this.gameObject.name.Replace(' ', '_'));
+        SceneManager.LoadScene(gameObject.name.Replace(' ', '_'));
     }
 }

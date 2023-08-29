@@ -21,17 +21,14 @@ public class LevelMenagerGenerator : MonoBehaviour
         System.Random random = new System.Random();
 
         Material skyBox;
-        bool stateDay;
 
         if (random.Next(0, 101) % 2 == 0)
         {
             skyBox = skyBoxesDay[random.Next(0, skyBoxesDay.Length)];
-            stateDay = true;
         }
         else
         {
             skyBox = skyBoxesNight[random.Next(0, skyBoxesNight.Length)];
-            stateDay = false;
             lightDay.color = new Color(r: 0f, g: 0f, b: 0f, a: 255f);
         }
 
@@ -42,11 +39,11 @@ public class LevelMenagerGenerator : MonoBehaviour
         int partsCountLevel = level * 20;
 
         GeneratorLevel generator = new GeneratorLevel();
-        bool is_defoult = true;
+        bool isDefoult = true;
         for (int part = 0; part < partsCountLevel; part++)
         {
-            generator.GeneratePart(gameObjectsGround, gameObjectsHouse, is_defoult);
-            is_defoult = false;
+            generator.GeneratePart(gameObjectsGround, gameObjectsHouse, isDefoult);
+            isDefoult = false;
         }
     }
 
@@ -66,12 +63,12 @@ public class LevelMenagerGenerator : MonoBehaviour
             this.startZ = startZ;
         }
 
-        private int[,] PartPatternGenerator(bool is_defoult)
+        private int[,] PartPatternGenerator(bool isDefoult)
         {
             int[,] arr = new int[25, 50];
             System.Random random = new System.Random();
 
-            if (!is_defoult)
+            if (!isDefoult)
             {
                 int countLines = random.Next(10, 13);
                 int startPattern = random.Next(0, (arr.GetLength(1) - countLines - 2)); ;
@@ -110,67 +107,67 @@ public class LevelMenagerGenerator : MonoBehaviour
             System.Random random = new System.Random();
 
             //Генератор мастов
-            int start_pos = -1;
-            int end_pos = -1;
+            int startPos = -1;
+            int endPos = -1;
             for (int i = 0; i < arr.GetLength(1); i++)
                 if (patternGround[2, i] == 2)
                 {
-                    if (start_pos < 0)
-                        start_pos = i;
-                    end_pos = i;
+                    if (startPos < 0)
+                        startPos = i;
+                    endPos = i;
                 }
 
-            if (start_pos > 0 && end_pos > 0)
+            if (startPos > 0 && endPos > 0)
                 if (random.Next(0, 101) % 2 == 0)
-                    arr[2, (start_pos + ((end_pos - start_pos + 1) / 2))] = 3;
+                    arr[2, (startPos + ((endPos - startPos + 1) / 2))] = 3;
                 else
-                    arr[2, start_pos + 1] = 4;
+                    arr[2, startPos + 1] = 4;
 
             //Генератор короблей
-            start_pos = -1;
-            end_pos = -1;
+            startPos = -1;
+            endPos = -1;
             for (int i = 0; i < arr.GetLength(1); i++)
                 if (patternGround[15, i] == 2)
                 {
-                    if (start_pos < 0)
-                        start_pos = i;
-                    end_pos = i;
+                    if (startPos < 0)
+                        startPos = i;
+                    endPos = i;
                 }
 
-            if (start_pos > 0 && end_pos > 0)
+            if (startPos > 0 && endPos > 0)
                 if (random.Next(0, 101) % 2 == 1)
-                    arr[15, (start_pos + ((end_pos - start_pos + 1) / 2))] = 2;
+                    arr[15, (startPos + ((endPos - startPos + 1) / 2))] = 2;
 
             return arr;
         }
 
-        public void GeneratePart(GameObject[] groundObj, GameObject[] gameObjectsHouse, bool is_defoultPattern)
+        public void GeneratePart(GameObject[] groundObj, GameObject[] gameObjectsHouse, bool isDefoultPattern)
         {
-            int[,] arr_ground = PartPatternGenerator(is_defoultPattern);
-            int[,] arr_obj = GeneratePatternObjects(arr_ground);
+            int[,] arrGround = PartPatternGenerator(isDefoultPattern);
+            int[,] arrObj = GeneratePatternObjects(arrGround);
 
             float x,y,z = 0;
 
-            for (int i = 0; i < arr_ground.GetLength(0); i++)
+            for (int i = 0; i < arrGround.GetLength(0); i++)
             {
-                this.startX = this.defoultStartX;
-                for (int j = 0; j < arr_ground.GetLength(1); j++)
+                startX = defoultStartX;
+                for (int j = 0; j < arrGround.GetLength(1); j++)
                 {
-                    x = groundObj[arr_ground[i, j]].transform.localScale.x;
-                    y = groundObj[arr_ground[i, j]].transform.localScale.y;
-                    z = groundObj[arr_ground[i, j]].transform.localScale.z;
+                    x = groundObj[arrGround[i, j]].transform.localScale.x;
+                    y = groundObj[arrGround[i, j]].transform.localScale.y;
+                    z = groundObj[arrGround[i, j]].transform.localScale.z;
 
-                    Instantiate(groundObj[arr_ground[i, j]], new Vector3(this.startX, this.startY, this.startZ), Quaternion.identity);
+                    Instantiate(groundObj[arrGround[i, j]], new Vector3(startX, startY, startZ), Quaternion.identity);
 
-                    if (arr_obj[i,j] > 0)
-                        Instantiate(gameObjectsHouse[arr_obj[i, j]], new Vector3(this.startX, (this.startY + gameObjectsHouse[Math.Abs(arr_obj[i, j])].transform.position.y), this.startZ), gameObjectsHouse[arr_obj[i, j]].transform.rotation);
+                    if (arrObj[i,j] > 0)
+                        Instantiate(gameObjectsHouse[arrObj[i, j]], new Vector3(startX, (startY + gameObjectsHouse[Math.Abs(arrObj[i, j])].transform.position.y), startZ), gameObjectsHouse[arrObj[i, j]].transform.rotation);
 
-                    this.startX += x;
+                    startX += x;
                 }
-                this.startZ += z;
+                startZ += z;
             }
-            this.defoultStartX = this.startX;
-            this.startZ = this.defoultStartZ;
+            defoultStartX = startX;
+            startZ = defoultStartZ;
         }
     }
 }

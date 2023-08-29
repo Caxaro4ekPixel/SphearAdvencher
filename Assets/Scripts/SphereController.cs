@@ -8,45 +8,46 @@ public class SphereController : MonoBehaviour
     [SerializeField] private Animator anim;
     private Rigidbody rb;   
     [SerializeField] private float speed;
-    [SerializeField] private bool is_jamp = false;
+    [SerializeField] private float jamp;
+    [SerializeField] private bool isJamp = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
     
-    void Update()
+    void FixedUpdate()
     {
 
         anim.SetFloat("Velocity", rb.velocity.magnitude);
 
         if (Input.GetKey(KeyCode.W))
-            rb.AddForce(0, 0, speed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddForce(0, 0, speed, ForceMode.Force);
         if (Input.GetKey(KeyCode.S))
-            rb.AddForce(0, 0, -speed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddForce(0, 0, -speed, ForceMode.Force);
         if (Input.GetKey(KeyCode.A))
-            rb.AddForce(-speed * Time.deltaTime, 0, 0, ForceMode.Impulse);
+            rb.AddForce(-speed, 0, 0, ForceMode.Force);
         if (Input.GetKey(KeyCode.D))
-            rb.AddForce(speed * Time.deltaTime, 0, 0, ForceMode.Impulse);
+            rb.AddForce(speed, 0, 0, ForceMode.Force);
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!is_jamp)
+            if (!isJamp)
             {
                 anim.SetBool("Jamp", true);
-                rb.AddForce(0, speed, 0, ForceMode.Impulse);
+                rb.AddForce(0, jamp, 0, ForceMode.Impulse);
             }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
-            is_jamp = false;
+        if (collision.gameObject.CompareTag("Ground"))
+            isJamp = false;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
-            is_jamp = true;
+        if (collision.gameObject.CompareTag("Ground"))
+            isJamp = true;
     }
 }
