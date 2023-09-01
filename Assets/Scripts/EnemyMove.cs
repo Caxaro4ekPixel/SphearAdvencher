@@ -14,29 +14,35 @@ public class EnemyMove : MonoBehaviour
     private System.Random random = new System.Random();
     private Transform nextPosition;
 
+    private Animator animatorEnemyMove;
+
+    private Vector3 targetPosition;
+    private Vector3 direction;
+    private Quaternion newRotation;
+
+    private void Start()
+    {
+        animatorEnemyMove = gameObject.GetComponent<Animator>();
+    }
 
     private void Update()
     {
-        //Меняем анимацию на двежение
-        gameObject.GetComponent<Animator>().SetBool("Is move", isMove);
+        animatorEnemyMove.SetBool("Is move", isMove);
 
-        //Если движения нет, то выбираем новую точку
         if (!isMove)
         {
             nextPoint = random.Next(0, ponts.Length);
             isMove = true;
         }
 
-        //Поворачиваем в сторону точки
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (ponts[nextPoint].transform.position - transform.position), speed * Time.deltaTime, 0.0F);
-        transform.rotation = Quaternion.LookRotation(newDir);
+        targetPosition = ponts[nextPoint].transform.position;
+        direction = targetPosition - transform.position;
+        newRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, speed * Time.deltaTime);
 
-        //Движем объект
-        transform.position = Vector3.MoveTowards(transform.position, ponts[nextPoint].transform.position, speed * Time.deltaTime);
-        
-        //Получаем координаты точки и если мы уже пришли то останавливаем движение
-        nextPosition = ponts[nextPoint].transform;
-        if (transform.position.x == nextPosition.position.x && transform.position.y == nextPosition.position.y && transform.position.z == nextPosition.position.z)
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+
+        if (transform.position == targetPosition)
             isMove = false;
     }
 }

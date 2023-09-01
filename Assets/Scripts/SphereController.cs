@@ -16,7 +16,7 @@ public class SphereController : MonoBehaviour
     }
 
     
-    void FixedUpdate()
+    void Update()
     {
 
         anim.SetFloat("Velocity", rb.velocity.magnitude);

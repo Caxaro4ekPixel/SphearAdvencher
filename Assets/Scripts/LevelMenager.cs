@@ -20,13 +20,16 @@ public class LevelMenager : MonoBehaviour
     [SerializeField] private Light lightDay;
 
     [SerializeField] private SphereCollider player;
-    [SerializeField] private GameObject text;
+    [SerializeField] private Text text;
 
     private MeshCollider[] coins;
     private int coin—ounter;
     private int allCoin—ounter;
 
     private GameObject coinTemp;
+
+    private GameObject[] temp;
+
     void Start()
     {
         System.Random random = new System.Random();
@@ -55,7 +58,7 @@ public class LevelMenager : MonoBehaviour
         lightDay.intensity = 1;
 
         coin—ounter = 0;
-        GameObject[] temp = GameObject.FindGameObjectsWithTag("Coin");
+        temp = GameObject.FindGameObjectsWithTag("Coin");
         MeshCollider[] tempCollidersCoin = new MeshCollider[temp.Length];
 
         for (int i = 0; i < temp.Length; i++)
@@ -72,21 +75,20 @@ public class LevelMenager : MonoBehaviour
         //GenerateLevel(levelNum * levelPartCount, 25, 50);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         coin—ounter = allCoin—ounter - GameObject.FindGameObjectsWithTag("Coin").Length;
 
-        int resultsAmount = Physics.OverlapSphereNonAlloc(player.transform.position + player.center, player.radius * 2, coins);
-        for (int i = 0; i < resultsAmount; i++)
+        Collider[] coins = Physics.OverlapSphere(player.transform.position + player.center, player.radius * 2);
+        foreach (Collider coin in coins)
         {
-            var colliderInSphere = coins[i];
-            if (colliderInSphere.gameObject.tag == "Coin")
+            if (coin.CompareTag("Coin"))
             {
-                coinTemp = GameObject.Find(colliderInSphere.gameObject.name);
-                coinTemp.GetComponent<Animator>().SetBool("Take", true);
+                coin.gameObject.GetComponent<Animator>().SetBool("Take", true);
             }
         }
-        text.GetComponent<Text>().text = string.Format(" ÓÎ-‚Ó ÏÓÌÂÚÓÍ: {0}/{1}", coin—ounter, allCoin—ounter);
+
+        text.text = $" ÓÎ-‚Ó ÏÓÌÂÚÓÍ: {coin—ounter}/{allCoin—ounter}";
 
         if (coin—ounter == allCoin—ounter)
             SceneManager.LoadScene(nextLevel);
@@ -169,7 +171,7 @@ public class LevelMenager : MonoBehaviour
     //        //√ÂÌÂ‡ˆËˇ –ÂÍË
     //        if (random.Next(0,101) > 90)
     //        {
-                
+
     //        }
 
     //        return lastCoord;
@@ -206,7 +208,7 @@ public class LevelMenager : MonoBehaviour
     //        partsLevel[part] = new PartLevel(partCountX, partCountY, gameObjectsGround, gameObjectsObjects);
     //        lastCoord = partsLevel[part].GeneratePattern(lastCoord);
     //    }
-        
+
     //    for (int part = 0; part < partsLevel.Length; part++)
     //    {
     //        partsLevel[part].CreatePattern();

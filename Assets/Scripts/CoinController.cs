@@ -6,6 +6,6 @@ public class CoinController : MonoBehaviour
 {
     public void OnDestroyCoin()
     {
-        Destroy(gameObject);
+        Destroy(gameObject.transform.parent.gameObject);
     }
 }
