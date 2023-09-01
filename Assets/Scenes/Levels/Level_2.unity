@@ -10295,6 +10295,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f8a60d169ab8a46b09c9b01a3e51601f, type: 2}
   - {fileID: 2100000, guid: 42dc3b9b0dd2040fc9ef0182fdea0e50, type: 2}
   lightDay: {fileID: 1934456225}
+  stars: {fileID: 1483807002}
   player: {fileID: 1740148289}
   text: {fileID: 1718555253}
 --- !u!1 &2012866837

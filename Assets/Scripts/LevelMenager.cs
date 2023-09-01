@@ -18,6 +18,7 @@ public class LevelMenager : MonoBehaviour
     [SerializeField] private Material[] skyBoxesDay;
     [SerializeField] private Material[] skyBoxesNight;
     [SerializeField] private Light lightDay;
+    [SerializeField] private GameObject stars;
 
     [SerializeField] private SphereCollider player;
     [SerializeField] private Text text;
@@ -30,11 +31,15 @@ public class LevelMenager : MonoBehaviour
 
     private GameObject[] temp;
 
-    void Start()
-    {
-        System.Random random = new System.Random();
+    private Vector3 positionCenter;
+    private float diameter;
+    private System.Random random;
+    private Material skyBox;
 
-        Material skyBox;
+    private void Start()
+    {
+        random = new System.Random();
+
         bool stateDay;
 
         if (random.Next(0, 101) % 2 == 0)
@@ -47,6 +52,7 @@ public class LevelMenager : MonoBehaviour
             skyBox = skyBoxesNight[random.Next(0, skyBoxesNight.Length)];
             stateDay = false;
             lightDay.color = new Color(r: 0f, g: 0f, b: 0f, a: 255f);
+            stars.SetActive(true);
         }
 
         GameObject[] gameObjectLigth = GameObject.FindGameObjectsWithTag("LampLight");
@@ -77,9 +83,13 @@ public class LevelMenager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        positionCenter = player.transform.position + player.center;
+        diameter = player.radius * 2;
+
         coin—ounter = allCoin—ounter - GameObject.FindGameObjectsWithTag("Coin").Length;
 
-        Collider[] coins = Physics.OverlapSphere(player.transform.position + player.center, player.radius * 2);
+
+        Collider[] coins = Physics.OverlapSphere(positionCenter, diameter);
         foreach (Collider coin in coins)
         {
             if (coin.CompareTag("Coin"))
